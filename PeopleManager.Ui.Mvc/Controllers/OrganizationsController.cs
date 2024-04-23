@@ -30,6 +30,11 @@ namespace PeopleManager.Ui.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Organization organization)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(organization);
+            }
+
             _dbContext.Organizations.Add(organization);
             _dbContext.SaveChanges();
 
@@ -53,6 +58,11 @@ namespace PeopleManager.Ui.Mvc.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Edit([FromRoute] int id, [FromForm] Organization organization)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(organization);
+            }
+
             var dbOrganization = _dbContext.Organizations
                 .FirstOrDefault(p => p.Id == id);
 

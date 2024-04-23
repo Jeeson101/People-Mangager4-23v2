@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic.CompilerServices;
 using PeopleManager.Ui.Mvc.Core;
 using PeopleManager.Ui.Mvc.Models;
+using System;
 
 namespace PeopleManager.Ui.Mvc.Controllers
 {
@@ -28,11 +29,7 @@ namespace PeopleManager.Ui.Mvc.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            var organizations = _dbContext.Organizations.ToList();
-
-            ViewBag.Organizations = organizations;
-
-            return View();
+            return CreateEditView();
         }
 
         [HttpPost]
@@ -41,9 +38,7 @@ namespace PeopleManager.Ui.Mvc.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var organizations = _dbContext.Organizations.ToList();
-                ViewBag.Organizations = organizations;
-                return View(person);
+                return CreateEditView(person);
             }
 
             _dbContext.People.Add(person);
@@ -63,11 +58,7 @@ namespace PeopleManager.Ui.Mvc.Controllers
                 return RedirectToAction("Index");
             }
 
-            var organizations = _dbContext.Organizations.ToList();
-
-            ViewBag.Organizations = organizations;
-
-            return View(person);
+            return CreateEditView(person);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -75,9 +66,7 @@ namespace PeopleManager.Ui.Mvc.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var organizations = _dbContext.Organizations.ToList();
-                ViewBag.Organizations = organizations;
-                return View(person);
+                return CreateEditView(person);
             }
 
             var dbPerson = _dbContext.People
@@ -122,6 +111,13 @@ namespace PeopleManager.Ui.Mvc.Controllers
             _dbContext.SaveChanges();
 
             return RedirectToAction("Index");
+        }
+
+        private IActionResult CreateEditView(Person? person = null)
+        {
+            var organizations = _dbContext.Organizations.ToList();
+            ViewBag.Organizations = organizations;
+            return View(person);
         }
     }
 }
